@@ -9,14 +9,20 @@ const Users = () => {
         setUsers(prevState => prevState.filter(user => user._id !== userId))
     }
 
-    const renderPhrase = () => {
+    const renderUsersQualities = (user) => {
+        return (
+            user.qualities.map(quality => (
+                <span className={"m-2 badge bg-" + quality.color}>
+                        {quality.name}
+                    </span>))
+        )
+    }
+
+    const renderUsersTable = () => {
         return users.map(user => (
             <tr key={user._id}>
                 <td>{user.name}</td>
-                <td>{user.qualities.map(quality => (
-                    <span className={"m-2 badge bg-" + quality.color}>
-                        {quality.name}
-                    </span>))}</td>
+                <td>{renderUsersQualities(user)}</td>
                 <td>{user.profession.name}</td>
                 <td>{user.completedMeetings}</td>
                 <td>{user.rate}</td>
@@ -31,23 +37,21 @@ const Users = () => {
         ))
     }
 
-    const renderAmountTag = (amount) => {
-        const amountString = String(amount).split('')
-        const lastLetter = Number(amountString.slice(amountString.length-1, amountString.length))
-        if(amount === 0) {
+    const renderPhrase = (number) => {
+        if(!number) {
             return <h1 className="btn btn-danger m-2">Сегодня никто с тобой не тусанет</h1>
-        } else if((lastLetter === 1 && (amount === 1 || amount > 20))
-            || (amount > 4 && amount < 11)
-            || (amount > 10 && amount < 15) ) {
-            return <h1 className="btn btn-primary m-2">{amount} человек тусанет с тобой сегодня</h1>
+        } else if((number%10 === 1 && (number === 1 || number > 20))
+            || (number > 4 && number < 11)
+            || (number > 10 && number < 15) ) {
+            return <h1 className="btn btn-primary m-2">{number} человек тусанет с тобой сегодня</h1>
         } else {
-            return <h1 className="btn btn-primary m-2">{amount} человека тусанет с тобой сегодня</h1>
+            return <h1 className="btn btn-primary m-2">{number} человека тусанет с тобой сегодня</h1>
         }
     }
 
     return (
     <>
-        {renderAmountTag(users.length)}
+        {renderPhrase(users.length)}
         <table className="table">
             <thead>
             <tr>
@@ -59,7 +63,7 @@ const Users = () => {
             </tr>
             </thead>
             <tbody>
-                 {renderPhrase()}
+                 {renderUsersTable()}
             </tbody>
         </table>
     </>
