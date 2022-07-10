@@ -9,9 +9,9 @@ const Users = () => {
         setUsers(prevState => prevState.filter(user => user._id !== userId))
     }
 
-    const renderUsersQualities = (user) => {
+    const renderUsersQualities = (qualities) => {
         return (
-            user.qualities.map(quality => (
+            qualities.map(quality => (
                 <span className={"m-2 badge bg-" + quality.color}>
                         {quality.name}
                     </span>))
@@ -19,22 +19,23 @@ const Users = () => {
     }
 
     const renderUsersTable = () => {
-        return users.map(user => (
-            <tr key={user._id}>
-                <td>{user.name}</td>
-                <td>{renderUsersQualities(user)}</td>
-                <td>{user.profession.name}</td>
-                <td>{user.completedMeetings}</td>
-                <td>{user.rate}</td>
-                <td>
-                    <button className="btn btn-danger"
-                            onClick={() => handleDelete(user._id)}
-                    >
-                        delete
-                    </button>
-                </td>
-            </tr>
-        ))
+        return users.map(({_id, name, qualities, profession, completedMeetings, rate}) => (
+                 <tr key={_id}>
+                     <td>{name}</td>
+                     <td>{renderUsersQualities(qualities)}</td>
+                     <td>{profession.name}</td>
+                     <td>{completedMeetings}</td>
+                     <td>{rate}</td>
+                     <td>
+                         <button className="btn btn-danger"
+                                 onClick={() => handleDelete(_id)}
+                         >
+                             delete
+                         </button>
+                     </td>
+                 </tr>
+             )
+        )
     }
 
     const renderPhrase = (number) => {
