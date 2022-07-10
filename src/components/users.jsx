@@ -9,50 +9,45 @@ const Users = () => {
         setUsers(prevState => prevState.filter(user => user._id !== userId))
     }
 
-    const renderUsersQualities = (qualities) => {
-        return (
-            qualities.map(quality => (
-                <span className={"m-2 badge bg-" + quality.color}>
+    const renderPhrase = () => {
+        return users.map(user => (
+            <tr key={user._id}>
+                <td>{user.name}</td>
+                <td>{user.qualities.map(quality => (
+                    <span className={"m-2 badge bg-" + quality.color}>
                         {quality.name}
-                    </span>))
-        )
+                    </span>))}</td>
+                <td>{user.profession.name}</td>
+                <td>{user.completedMeetings}</td>
+                <td>{user.rate}</td>
+                <td>
+                    <button className="btn btn-danger"
+                            onClick={() => handleDelete(user._id)}
+                    >
+                        delete
+                    </button>
+                </td>
+            </tr>
+        ))
     }
 
-    const renderUsersTable = () => {
-        return users.map(({_id, name, qualities, profession, completedMeetings, rate}) => (
-                 <tr key={_id}>
-                     <td>{name}</td>
-                     <td>{renderUsersQualities(qualities)}</td>
-                     <td>{profession.name}</td>
-                     <td>{completedMeetings}</td>
-                     <td>{rate}</td>
-                     <td>
-                         <button className="btn btn-danger"
-                                 onClick={() => handleDelete(_id)}
-                         >
-                             delete
-                         </button>
-                     </td>
-                 </tr>
-             )
-        )
-    }
-
-    const renderPhrase = (number) => {
-        if(!number) {
+    const renderAmountTag = (amount) => {
+        const amountString = String(amount).split('')
+        const lastLetter = Number(amountString.slice(amountString.length-1, amountString.length))
+        if(amount === 0) {
             return <h1 className="btn btn-danger m-2">Сегодня никто с тобой не тусанет</h1>
-        } else if((number%10 === 1 && (number === 1 || number > 20))
-            || (number > 4 && number < 11)
-            || (number > 10 && number < 15) ) {
-            return <h1 className="btn btn-primary m-2">{number} человек тусанет с тобой сегодня</h1>
+        } else if((lastLetter === 1 && (amount === 1 || amount > 20))
+            || (amount > 4 && amount < 11)
+            || (amount > 10 && amount < 15) ) {
+            return <h1 className="btn btn-primary m-2">{amount} человек тусанет с тобой сегодня</h1>
         } else {
-            return <h1 className="btn btn-primary m-2">{number} человека тусанет с тобой сегодня</h1>
+            return <h1 className="btn btn-primary m-2">{amount} человека тусанет с тобой сегодня</h1>
         }
     }
 
     return (
     <>
-        {renderPhrase(users.length)}
+        {renderAmountTag(users.length)}
         <table className="table">
             <thead>
             <tr>
@@ -64,7 +59,7 @@ const Users = () => {
             </tr>
             </thead>
             <tbody>
-                 {renderUsersTable()}
+                 {renderPhrase()}
             </tbody>
         </table>
     </>
