@@ -1,6 +1,6 @@
 import React from "react";
 
-const SearchStatus = (length) => {
+const SearchStatus = ({length}) => {
     if(!length) {
         return <h1 className="btn btn-danger m-2">Сегодня никто с тобой не тусанет</h1>
     } else if((length%10 === 1 && (length === 1 || length > 20))

@@ -1,12 +1,11 @@
 import React from "react";
 
-const Qualities = (qualities) => {
+const Qualitie = ({color, name}) => {
     return (
-        qualities.map(quality => (
-            <span className={"m-2 badge bg-" + quality.color}>
-                        {quality.name}
-                    </span>))
+            <span className={"m-2 badge bg-" + color}>
+                {name}
+            </span>
     )
 }
 
-export default Qualities
+export default Qualitie

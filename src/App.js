@@ -3,6 +3,7 @@ import api from "./api";
 import "bootstrap/dist/css/bootstrap.css"
 import SearchStatus from "./components/searchStatus";
 import Users from "./components/users";
+import user from "./components/user";
 
 const App = () => {
     const [users, setUsers] = useState(api.users.fetchAll())
@@ -12,32 +13,21 @@ const App = () => {
     }
 
     const handleToggleBookmark = (userId) => {
-        const userIndex = users.findIndex(u => u._id === userId)
-        const newUsers = [...users]
-        newUsers[userIndex].bookmark = !newUsers[userIndex].bookmark
-        setUsers(newUsers)
+        setUsers(
+            users.map((user)=>{
+                if(user._id === userId) {
+                    return {...user, bookmark: !user.bookmark}
+                }
+                return user
+            })
+        )
     }
 
     return (
-        <>
-            {SearchStatus(users.length)}
-            <table className="table">
-                <thead>
-                <tr>
-                    <th scope="col">Имя</th>
-                    <th scope="col">Качества</th>
-                    <th scope="col">Профессия</th>
-                    <th scope="col">Встретился,раз</th>
-                    <th scope="col">Оценка</th>
-                    <th scope="col">Избранное</th>
-
-                </tr>
-                </thead>
-                <tbody>
-                    {Users(users, handleToggleBookmark, handleDelete)}
-                </tbody>
-            </table>
-        </>
+        <div>
+            <SearchStatus length={users.length} />
+            <Users onDelete={handleDelete} onToggleBookmark={handleToggleBookmark} users={users} />
+        </div>
     )
 }
 
