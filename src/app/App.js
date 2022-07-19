@@ -3,7 +3,6 @@ import api from "./api";
 import "bootstrap/dist/css/bootstrap.css";
 import SearchStatus from "./components/searchStatus";
 import Users from "./components/users";
-import user from "./components/user";
 
 const App = () => {
     const [users, setUsers] = useState(api.users.fetchAll());
