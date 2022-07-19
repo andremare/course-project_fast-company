@@ -2,7 +2,17 @@ import React from "react";
 import Qualitie from "./qualitie";
 import BookMark from "./bookmark";
 
-const User = ({_id, name, qualities, profession, completedMeetings, rate, bookmark, onToggleBookmark, onDelete}) => {
+const User = ({
+    _id,
+    name,
+    qualities,
+    profession,
+    completedMeetings,
+    rate,
+    bookmark,
+    onToggleBookmark,
+    onDelete
+}) => {
     return (
         <tr>
             <td>{name}</td>
@@ -21,14 +31,15 @@ const User = ({_id, name, qualities, profession, completedMeetings, rate, bookma
                 />
             </td>
             <td>
-                <button className="btn btn-danger"
-                        onClick={() => onDelete(_id)}
+                <button
+                    className="btn btn-danger"
+                    onClick={() => onDelete(_id)}
                 >
                     delete
                 </button>
             </td>
         </tr>
-    )
-}
+    );
+};
 
-export default User
+export default User;
