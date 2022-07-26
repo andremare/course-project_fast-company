@@ -2,29 +2,26 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const SearchStatus = ({ length }) => {
-    if (!length) {
-        return (
-            <h1 className="btn btn-danger m-2">
-                Сегодня никто с тобой не тусанет
-            </h1>
-        );
-    } else if (
-        (length % 10 === 1 && (length === 1 || length > 20)) ||
-        (length > 4 && length < 11) ||
-        (length > 10 && length < 15)
-    ) {
-        return (
-            <h1 className="btn btn-primary m-2">
-                {length} человек тусанет с тобой сегодня
-            </h1>
-        );
-    } else {
-        return (
-            <h1 className="btn btn-primary m-2">
-                {length} человека тусанет с тобой сегодня
-            </h1>
-        );
-    }
+    const renderPhrase = (number) => {
+        const lastOne = Number(number.toString().slice(-1));
+        if (number > 4 && number < 15) {
+            return "человек тусанет";
+        }
+        if (lastOne === 1) return "человек тусанет";
+        if ([2, 3, 4].indexOf(lastOne) >= 0) return "человека тусанут";
+        return "человек тусанет";
+    };
+    return (
+        <h2>
+            <span
+                className={"badge " + (length > 0 ? "bg-primary" : "bg-danger")}
+            >
+                {length > 0
+                    ? `${length + " " + renderPhrase(length)}   с тобой сегодня`
+                    : "Никто с тобой не тусанет"}
+            </span>
+        </h2>
+    );
 };
 
 SearchStatus.propTypes = {
