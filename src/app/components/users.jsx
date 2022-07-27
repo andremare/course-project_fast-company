@@ -27,7 +27,7 @@ const Users = ({ users: allUsers, ...rest }) => {
         setSelectedProf(item);
     };
 
-    const filteredUsers = selectedProf ? allUsers.filter((user) => user.profession === selectedProf) : allUsers;
+    const filteredUsers = selectedProf ? allUsers.filter((user) => user.profession.name === selectedProf.name) : allUsers;
 
     const count = filteredUsers.length;
 
