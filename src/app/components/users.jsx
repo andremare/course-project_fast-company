@@ -54,11 +54,19 @@ const Users = () => {
         setSelectedProf();
     };
     if (users) {
-        const filteredUsers = selectedProf ? users.filter((user) => user.profession.name === selectedProf.name) : users;
+        const filteredUsers = selectedProf
+            ? users.filter((user) => user.profession.name === selectedProf.name)
+            : users;
         const count = filteredUsers.length;
-        const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
+        const sortedUsers = _.orderBy(
+            filteredUsers,
+            [sortBy.path],
+            [sortBy.order]
+        );
         const userCrop = paginate(sortedUsers, currentPage, pageSize);
-        if (userCrop.length === 0 && currentPage > 1) { setCurrentPage(currentPage - 1); };
+        if (userCrop.length === 0 && currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
         return (
             <div className="d-flex">
                 {professions && (
@@ -68,7 +76,12 @@ const Users = () => {
                             items={professions}
                             onItemSelect={handleProfessionSelect}
                         />
-                        <button className="btn btn-secondary mt-2" onClick={clearFilter}>Очистить</button>
+                        <button
+                            className="btn btn-secondary mt-2"
+                            onClick={clearFilter}
+                        >
+                            Очистить
+                        </button>
                     </div>
                 )}
 
@@ -94,7 +107,7 @@ const Users = () => {
                 </div>
             </div>
         );
-    };
+    }
     return "loading...";
 };
 

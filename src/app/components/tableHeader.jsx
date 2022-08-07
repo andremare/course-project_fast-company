@@ -4,16 +4,24 @@ import PropTypes from "prop-types";
 const TableHeader = ({ onSort, selectedSort, columns }) => {
     const handleSort = (item) => {
         if (selectedSort.path === item) {
-            onSort({ ...selectedSort, order: selectedSort.order === "asc" ? "desc" : "asc" });
+            onSort({
+                ...selectedSort,
+                order: selectedSort.order === "asc" ? "desc" : "asc"
+            });
         } else {
             onSort({ path: item, order: "asc" });
         }
     };
 
-    const changeSortingCaret = () => {
-        return selectedSort.order === "asc"
-            ? <i className="bi bi-caret-up-fill"></i>
-            : <i className="bi bi-caret-down-fill"></i>;
+    const renderSortingCaret = (selectedSort, currentPath) => {
+        if (currentPath && selectedSort.path === currentPath) {
+            if (selectedSort.order === "asc") {
+                return <i className="bi bi-caret-down-fill"></i>;
+            } else {
+                return <i className="bi bi-caret-up-fill"></i>;
+            }
+        }
+        return null;
     };
 
     return (
@@ -22,14 +30,16 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
                 {Object.keys(columns).map((column) => (
                     <th
                         key={column}
-                        onClick={columns[column].path ? () => handleSort(columns[column].path) : undefined}
+                        onClick={
+                            columns[column].path
+                                ? () => handleSort(columns[column].path)
+                                : undefined
+                        }
                         scope="col"
                         {...{ role: columns[column].path && "button" }}
                     >
                         {columns[column].name}
-                        <span>
-                            {selectedSort.path && selectedSort.path === columns[column].path && changeSortingCaret()}
-                        </span>
+                        {renderSortingCaret(selectedSort, columns[column].path)}
                     </th>
                 ))}
             </tr>
