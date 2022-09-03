@@ -9,6 +9,7 @@ import UserTable from "../components/userTable";
 import _ from "lodash";
 import { useParams } from "react-router-dom";
 import UserPage from "../components/userPage";
+import SearchInput from "../components/searchInput";
 
 const Users = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -17,6 +18,7 @@ const Users = () => {
     const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
     const pageSize = 8;
     const [users, setUsers] = useState();
+    const [findText, setFindText] = useState();
     const params = useParams();
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
@@ -48,10 +50,15 @@ const Users = () => {
         setCurrentPage(pageIndex);
     };
     const handleProfessionSelect = (item) => {
+        setFindText("");
         setSelectedProf(item);
     };
     const handleSort = (item) => {
         setSortBy(item);
+    };
+    const handleSearchInput = (e) => {
+        setFindText(e.target.value);
+        clearFilter();
     };
     const clearFilter = () => {
         setSelectedProf();
@@ -60,9 +67,11 @@ const Users = () => {
         const filteredUsers = selectedProf
             ? users.filter((user) => user.profession.name === selectedProf.name)
             : users;
-        const count = filteredUsers.length;
+        const countFilteredUsers = filteredUsers.length;
+        const foundUsers = users.filter((user) => findText ? user.name.toLowerCase().includes(findText.toLowerCase()) : false);
+        const countFoundUsers = foundUsers.length;
         const sortedUsers = _.orderBy(
-            filteredUsers,
+            findText ? foundUsers : filteredUsers,
             [sortBy.path],
             [sortBy.order]
         );
@@ -92,8 +101,9 @@ const Users = () => {
                     )}
 
                     <div className="d-flex flex-column">
-                        <SearchStatus length={count} />
-                        {count > 0 && (
+                        <SearchStatus length={findText ? countFoundUsers : countFilteredUsers} />
+                        <SearchInput value={findText} onChange={handleSearchInput} />
+                        {(countFoundUsers || countFilteredUsers) > 0 && (
                             <UserTable
                                 users={userCrop}
                                 onSort={handleSort}
@@ -104,7 +114,7 @@ const Users = () => {
                         )}
                         <div className="d-flex justify-content-center">
                             <Pagination
-                                itemsCount={count}
+                                itemsCount={findText ? countFoundUsers : countFilteredUsers}
                                 pageSize={pageSize}
                                 currentPage={currentPage}
                                 onPageChange={handlePageChange}
