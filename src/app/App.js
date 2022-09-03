@@ -1,10 +1,10 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import Users from "./components/users";
+import Users from "./layouts/users";
 import NavBar from "./components/navBar";
 import { Redirect, Route, Switch } from "react-router-dom";
-import Main from "./components/main";
-import Login from "./components/login";
+import Main from "./layouts/main";
+import Login from "./layouts/login";
 
 const App = () => {
     return (

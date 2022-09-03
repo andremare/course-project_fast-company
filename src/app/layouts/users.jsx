@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "./pagination";
+import Pagination from "../components/pagination";
 import { paginate } from "../utils/paginate";
 import PropTypes from "prop-types";
-import GroupList from "./groupList";
+import GroupList from "../components/groupList";
 import api from "../api";
-import SearchStatus from "./searchStatus";
-import UserTable from "./userTable";
+import SearchStatus from "../components/searchStatus";
+import UserTable from "../components/userTable";
 import _ from "lodash";
 import { useParams } from "react-router-dom";
-import UserPage from "./userPage";
+import UserPage from "../components/userPage";
 
 const Users = () => {
     const [currentPage, setCurrentPage] = useState(1);
