@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import api from "../../../../api";
 import MultiSelectField from "../../form/multiSelectField";
 import RadioField from "../../form/radioField";
 import SelectField from "../../form/selectField";
 import TextField from "../../form/textField";
-// import PropTypes from "prop-types";
 
 const UserEditPage = () => {
     const { userId } = useParams();
     console.log("userId", userId);
+    const history = useHistory();
     const [professions, setProfessions] = useState([]);
     const [qualities, setQualities] = useState([]);
-    const [userById, setUserById] = useState();
     const [data, setData] = useState({
         name: "",
         email: "",
-        profession: "",
+        profession: {},
         sex: "",
-        qualities: ""
+        qualities: []
     });
     useEffect(() => {
-        api.users.getById(userId).then((data) => setUserById(data));
+        api.users.getById(userId).then((data) => setData(data));
         api.professions.fetchAll().then((data) => {
             const professionsList = Object.keys(data).map((professionName) => ({
                 label: data[professionName].name,
@@ -32,34 +31,29 @@ const UserEditPage = () => {
         api.qualities.fetchAll().then((data) => {
             const qualitiesList = Object.keys(data).map((optionName) => ({
                 value: data[optionName]._id,
-                label: data[optionName].name
+                label: data[optionName].name,
+                color: data[optionName].color
             }));
             setQualities(qualitiesList);
         });
     }, []);
 
-    const userQualitiesList = userById
-        ? userById.qualities.map((q) => ({
+    const userQualitiesList = data?.qualities?.length
+        ? data.qualities.map((q) => ({
             value: q._id,
-            label: q.name
+            label: q.name,
+            color: q.color
         }))
         : [];
     console.log("userQualitiesList", userQualitiesList);
-
     console.log("professions", professions);
     console.log("qualities", qualities);
-
     console.log("data", data);
-
-    console.log("userById", userById);
-
-    // const userPath = `/users/${userId}`;
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("e", e);
         api.users.update(userId, data);
         console.log("dataSubmit", data);
-        // history.replace(`/users/${userId}`);
+        history.push(`/users/${userId}`);
     };
     const handleChange = (target) => {
         console.log("target", target);
@@ -68,7 +62,8 @@ const UserEditPage = () => {
         if (target.name === "qualities") {
             const transformQualities = Object.keys(target.value).map((q) => ({
                 _id: data[q].value,
-                name: data[q].label
+                name: data[q].label,
+                color: data[q].color
             }));
             console.log("transformQualities", transformQualities);
             setData((prevState) => ({ ...prevState, [target.name]: transformQualities }));
@@ -85,7 +80,7 @@ const UserEditPage = () => {
     };
 
     return <>
-        {userById && professions && qualities
+        {data && professions && qualities
             ? (
                 <div className="container mt-5">
                     <div className="row">
@@ -94,13 +89,13 @@ const UserEditPage = () => {
                                 <TextField
                                     label="Имя"
                                     name="name"
-                                    value={data.name || userById.name}
+                                    value={data.name}
                                     onChange={handleChange}
                                 />
                                 <TextField
                                     label="Электронная почта"
                                     name="email"
-                                    value={data.email || userById.email}
+                                    value={data.email}
                                     onChange={handleChange}
                                 />
                                 <SelectField
@@ -109,7 +104,7 @@ const UserEditPage = () => {
                                     options={professions}
                                     name="profession"
                                     onChange={handleChange}
-                                    value={data.profession || userById.profession._id}
+                                    value={data.profession._id}
                                 />
                                 <RadioField
                                     options={[
@@ -117,26 +112,30 @@ const UserEditPage = () => {
                                         { name: "Female", value: "female" },
                                         { name: "Other", value: "other" }
                                     ]}
-                                    value={data.sex || userById.sex}
+                                    value={data.sex}
                                     name="sex"
                                     onChange={handleChange}
                                     label="Выберите ваш пол"
                                 />
+                                {console.log("qualities1", qualities)}
+                                {console.log("data.qualities1", data.qualities)}
                                 <MultiSelectField
+                                    defaultValue={data.qualities.map((q) => ({
+                                        value: q._id,
+                                        label: q.name,
+                                        color: q.color
+                                    }))}
                                     options={qualities}
                                     onChange={handleChange}
-                                    defaultValue={data.qualities || userQualitiesList}
                                     name="qualities"
                                     label="Выберите ваши качества"
                                 />
-                                {/* <Link to={userPath}> */}
                                 <button
                                     type="submit"
                                     className="btn btn-primary w-100 mx-auto"
                                 >
                                      Обновить
                                 </button>
-                                {/* </Link> */}
                             </form>
                         </div>
                     </div>
@@ -145,9 +144,5 @@ const UserEditPage = () => {
             : "Loading..." }
     </>;
 };
-//
-// // UserEditPage.propTypes = {
-// //
-// // };
-//
+
 export default UserEditPage;
