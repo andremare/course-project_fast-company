@@ -7,8 +7,8 @@ import QualitiesList from "../../../ui/qualities/qualitiesList";
 const UserPage = ({ id }) => {
     const [userById, setUserById] = useState();
     const history = useHistory();
-    const handleSave = () => {
-        history.push("/users");
+    const handleChange = () => {
+        history.push(`/users/${id}/edit`);
     };
     useEffect(() => {
         api.users.getById(id).then((data) => setUserById(data));
@@ -22,7 +22,7 @@ const UserPage = ({ id }) => {
                     <h5>{<QualitiesList qualities={userById.qualities} />}</h5>
                     <h4>{`Завершенные встречи: ${userById.completedMeetings}`}</h4>
                     <h5>{`Рейтинг: ${userById.rate}`}</h5>
-                    <button onClick={() => { handleSave(); }}>Все пользователи</button>
+                    <button onClick={() => { handleChange(); }}>Изменить</button>
                 </>
             )
             : "Loading..." }
