@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import api from "../../../../api";
 import PropTypes from "prop-types";
-import QualitiesList from "../../../ui/qualities/qualitiesList";
+import UserCard from "../../../ui/userCard";
+import QualitiesCard from "../../../ui/qualitiesCard";
+import MeetingsCard from "../../../ui/meetingsCard";
+import CommentsCard from "../../../ui/commentsCard";
 
 const UserPage = ({ id }) => {
     const [userById, setUserById] = useState();
-    const history = useHistory();
-    const handleChange = () => {
-        history.push(`/users/${id}/edit`);
-    };
     useEffect(() => {
         api.users.getById(id).then((data) => setUserById(data));
     }, []);
-    return <>
-        {userById
-            ? (
-                <>
-                    <h1>{userById.name}</h1>
-                    <h2>{`Профессия: ${userById.profession.name}`}</h2>
-                    <h5>{<QualitiesList qualities={userById.qualities} />}</h5>
-                    <h4>{`Завершенные встречи: ${userById.completedMeetings}`}</h4>
-                    <h5>{`Рейтинг: ${userById.rate}`}</h5>
-                    <button onClick={() => { handleChange(); }}>Изменить</button>
-                </>
-            )
-            : "Loading..." }
-    </>;
+    if (userById) {
+        return <div className="container">
+            <div className="row gutters-sm">
+                <div className="col-md-4 mb-3">
+                    <UserCard user={userById} />
+                    <QualitiesCard qualities={userById.qualities} />
+                    <MeetingsCard meetings={userById.completedMeetings} />
+                </div>
+                <div className="col-md-8">
+                    <CommentsCard/>
+                </div>
+            </div>
+        </div>;
+    } else {
+        return <h1>Loading...</h1>;
+    }
 };
 
 UserPage.propTypes = {

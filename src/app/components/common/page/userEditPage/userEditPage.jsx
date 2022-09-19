@@ -5,6 +5,7 @@ import MultiSelectField from "../../form/multiSelectField";
 import RadioField from "../../form/radioField";
 import SelectField from "../../form/selectField";
 import TextField from "../../form/textField";
+import BackHistoryButton from "../../table/backHistoryButton";
 
 const UserEditPage = () => {
     const { userId } = useParams();
@@ -59,6 +60,7 @@ const UserEditPage = () => {
         {data && professions && qualities
             ? (
                 <div className="container mt-5">
+                    <BackHistoryButton />
                     <div className="row">
                         <div className="col-md-6 offset-md-3 shadow p-4">
                             <form onSubmit={handleSubmit}>
